@@ -4,7 +4,8 @@ author: "Destiny Calvillo"
 date: "Summer 2021"
 output: 
     html_document:
-    toc: true
+         toc: true
+         toc_depth: 5
 ---
 
 ```{r include=FALSE,echo=FALSE}
@@ -14,9 +15,273 @@ require(forcats)
 OldData <-read.csv(file="covid91.csv",header=TRUE)
 #recode to remove the annoying "X" from the dataframe
 FinalData <- OldData %>% mutate(infected = recode(infected, aids = "covid", none = "OK" )) %>% select(-one_of("X"))
+FinalData <- FinalData %>% 
+mutate(across(where(is.character), as.factor))
+FinalData$treatment <- relevel(FinalData$treatment,ref="placebo")
+#FinalData$infected <- relevel(FinalData$infected,ref="OK")
+guy = filter(FinalData, sex =="guy")
+gal = filter(FinalData, sex =="gal")
+gay = filter(FinalData, LGBTQ =="gay")
+druguser = filter(FinalData, DrugUser =="yes")
 ```
 
 # Introduction
 
 A new  preventative vaccine (covid91) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
+
+# Approach
+
+We are going to approach this report by changing the variables from FinalData into factor variables, since they initially were character variables. Using the correct dplyr code we are able to do this change. The following code allowed us to do this :
+FinalData <- FinalData %>% 
+mutate(across(where(is.character), as.factor))
+
+After this we also need to make a separate datasets for each subgroup: gal, guy, gay, and drug-user. By doing this, we are able to individually assess and recommend the vaccine depending on which sub-group they belong to.
+
+# Guys
+
+## Barplot
+
+```{r}
+dd2 <- guy %>% group_by(infected, treatment) %>% summarize(count=n()) %>%
+mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
+basicCC + geom_bar(stat="identity",position="dodge")
+```
+
+The guy bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=guy)
+rowPerc(table1)
+colPerc(table1)
+```
+
+Th numerical results above go more in depth to the barplot information. It shows specific percentages of guys that got covid-19 after taking the placebo and taking the vaccine. 
+
+## Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+guyfish <- fisher.test(table1)
+guyfish
+```
+
+The most important results out of all everything we performed for this subgroup is the output of the Fisher's test. The p-value shown above is 6e-04. This is an extremely small p-value and it isn't greater than 0.05, so it is statistically significant and indicates strong evidence to reject the null hypothesis. Further, we retain the alternative hypothesis. As a result, we can say that there is a correlation between the covid-19 deaths and sex. Guys are 0.68 times more likely to get the infection than those who received the placebo. 
+
+```{r}
+effect <- guyfish$p.value/(guyfish$p.value +1)
+effectivenessguy = guyfish$estimate/(guyfish$estimate +1) 
+print(effectivenessguy*100)
+```
+
+```{r}
+low=(guyfish$conf.int[1]/(guyfish$conf.int[1] +1))
+hi=(guyfish$conf.int[2]/(guyfish$conf.int[2] +1))
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval is `r low` to `r hi`
+## Recommendations
+
+Because the effectiveness confidence interval is low, we would not recommend the covid-19 vaccine for the guys, or male gender.
+
+# Gals 
+## Barplot
+
+```{r}
+dd2 <- gal %>% group_by(infected, treatment) %>% summarize(count=n()) %>%
+mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
+basicCC + geom_bar(stat="identity",position="dodge")
+```
+
+The gal bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=gal)
+rowPerc(table1)
+colPerc(table1)
+```
+
+Th numerical results above go more in depth to the barplot information. It shows specific percentages of gals that got covid-19 after taking the placebo and taking the vaccine.
+
+## Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+galfish <- fisher.test(table1)
+galfish
+```
+
+The most important results out of all everything we performed for this subgroup is the output of the Fisher's test. The p-value shown above is 2e-16. This is an extremely small p-value and it isn't greater than 0.05, so it is statistically significant and indicates strong evidence to reject the null hypothesis. Further, we retain the alternative hypothesis. As a result, we can say that there is a correlation between the covid-19 deaths and sex. Gals are 2 times more likely not to get the infection than those who received the placebo. 
+
+```{r}
+effect <- galfish$p.value/(galfish$p.value +1)
+effectivenessgal = galfish$estimate/(galfish$estimate +1) 
+print(effectivenessgal*100)
+```
+
+```{r}
+low=(galfish$conf.int[1]/(galfish$conf.int[1] +1))
+hi=(galfish$conf.int[2]/(galfish$conf.int[2] +1))
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval is `r low` to `r hi`
+## Recommendations
+
+Because the effectiveness confidence interval is high, we would recommend the covid-19 vaccine for the gals, or female gender.
+
+# Gay Sexual Orientation
+## Barplot
+
+```{r}
+dd2 <- gay %>% group_by(infected, treatment) %>% summarize(count=n()) %>%
+mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
+basicCC + geom_bar(stat="identity",position="dodge")
+```
+
+The gay bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=gay)
+rowPerc(table1)
+colPerc(table1)
+```
+
+Th numerical results above go more in depth to the barplot information. It shows specific percentages of gays that got covid-19 after taking the placebo and taking the vaccine.
+
+## Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+gayfish <- fisher.test(table1)
+gayfish
+```
+
+The most important results out of all everything we performed for this subgroup is the output of the Fisher's test. The p-value shown above is 6e-06. This is an extremely small p-value and it isn't greater than 0.05, so it is statistically significant and indicates strong evidence to reject the null hypothesis. Further, we retain the alternative hypothesis. As a result, we can say that there is a correlation between the covid-19 deaths and sex. Guys are 0.4 times more likely to get the infection than those who received the placebo. 
+
+```{r}
+effect <- gayfish$p.value/(gayfish$p.value +1)
+effectivenessgay = gayfish$estimate/(gayfish$estimate +1) 
+print(effectivenessgay*100)
+```
+
+```{r}
+low=(gayfish$conf.int[1]/(gayfish$conf.int[1] +1))
+hi=(gayfish$conf.int[2]/(gayfish$conf.int[2] +1))
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval  is `r low` to `r hi`
+## Recommendations
+
+Because the effectiveness confidence interval is low, we would not recommend the covid-19 vaccine for the gays, or sexual orientation subgroup.
+
+# People that are Drug-users
+## Barplot
+
+```{r}
+dd2 <- druguser %>% group_by(infected, treatment) %>% summarize(count=n()) %>%
+mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
+basicCC + geom_bar(stat="identity",position="dodge")
+```
+
+The druguser bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+
+## Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=druguser)
+rowPerc(table1)
+colPerc(table1)
+```
+
+Th numerical results above go more in depth to the barplot information. It shows specific percentages of druguser that got covid-19 after taking the placebo and taking the vaccine.
+
+## Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+druguserfish <- fisher.test(table1)
+druguserfish
+```
+
+The most important results out of all everything we performed for this subgroup is the output of the Fisher's test. The p-value shown above is 0.002. This is a small p-value and it isn't greater than 0.05, so it is statistically significant and indicates strong evidence to reject the null hypothesis. Further, we retain the alternative hypothesis. As a result, we can say that there is a correlation between the covid-19 deaths and sex. Druguser's are 1.8 times more likely not to get the infection than those who received the placebo. 
+
+```{r}
+effect <- druguserfish$p.value/(druguserfish$p.value +1)
+effectivenessdruguser = druguserfish$estimate/(druguserfish$estimate +1) 
+print(effectivenessdruguser*100)
+```
+
+```{r}
+low=(druguserfish$conf.int[1]/(druguserfish$conf.int[1] +1))
+hi=(druguserfish$conf.int[2]/(druguserfish$conf.int[2] +1))
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval  is `r low` to `r hi`
+## Recommendations
+
+Because the effectiveness confidence interval is high, we would recommend the covid-19 vaccine for the drug-users.
+
+# Conclusion
+
+The covid-19 vaccine was not effective in protecting men against the infection/disease. The covid-19 effectiveness was `r effectivenessguy`.
+
+The covid-19 vaccine was successful and effective in protecting women against the infection/disease. The covid-19 effectiveness was `r effectivenessgal`.
+
+The covid-19 vaccine was not effective in protecting gays against the infection/disease. The covid-19 effectiveness was `r effectivenessgay`.
+
+The covid-19 vaccine was successful and effective in protecting drug-users against the infection/disease. The covid-19 effectiveness was `r effectivenessdruguser`.
+
 

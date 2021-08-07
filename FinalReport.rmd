@@ -82,13 +82,13 @@ The most important results out of all everything we performed for this subgroup 
 
 ```{r}
 effect <- guyfish$p.value/(guyfish$p.value +1)
-effectivenessguy = guyfish$estimate/(guyfish$estimate +1) 
-print(effectivenessguy*100)
+effectivenessguy = guyfish$estimate/(guyfish$estimate +1)*100 
+print(effectivenessguy)
 ```
 
 ```{r}
-low=(guyfish$conf.int[1]/(guyfish$conf.int[1] +1))
-hi=(guyfish$conf.int[2]/(guyfish$conf.int[2] +1))
+low=(guyfish$conf.int[1]/(guyfish$conf.int[1] +1))*100
+hi=(guyfish$conf.int[2]/(guyfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
@@ -141,13 +141,13 @@ The most important results out of all everything we performed for this subgroup 
 
 ```{r}
 effect <- galfish$p.value/(galfish$p.value +1)
-effectivenessgal = galfish$estimate/(galfish$estimate +1) 
-print(effectivenessgal*100)
+effectivenessgal = galfish$estimate/(galfish$estimate +1)*100
+print(effectivenessgal)
 ```
 
 ```{r}
-low=(galfish$conf.int[1]/(galfish$conf.int[1] +1))
-hi=(galfish$conf.int[2]/(galfish$conf.int[2] +1))
+low=(galfish$conf.int[1]/(galfish$conf.int[1] +1))*100
+hi=(galfish$conf.int[2]/(galfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
@@ -200,13 +200,13 @@ The most important results out of all everything we performed for this subgroup 
 
 ```{r}
 effect <- gayfish$p.value/(gayfish$p.value +1)
-effectivenessgay = gayfish$estimate/(gayfish$estimate +1) 
-print(effectivenessgay*100)
+effectivenessgay = gayfish$estimate/(gayfish$estimate +1)*100
+print(effectivenessgay)
 ```
 
 ```{r}
-low=(gayfish$conf.int[1]/(gayfish$conf.int[1] +1))
-hi=(gayfish$conf.int[2]/(gayfish$conf.int[2] +1))
+low=(gayfish$conf.int[1]/(gayfish$conf.int[1] +1))*100
+hi=(gayfish$conf.int[2]/(gayfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
@@ -259,13 +259,13 @@ The most important results out of all everything we performed for this subgroup 
 
 ```{r}
 effect <- druguserfish$p.value/(druguserfish$p.value +1)
-effectivenessdruguser = druguserfish$estimate/(druguserfish$estimate +1) 
-print(effectivenessdruguser*100)
+effectivenessdruguser = druguserfish$estimate/(druguserfish$estimate +1)*100 
+print(effectivenessdruguser)
 ```
 
 ```{r}
-low=(druguserfish$conf.int[1]/(druguserfish$conf.int[1] +1))
-hi=(druguserfish$conf.int[2]/(druguserfish$conf.int[2] +1))
+low=(druguserfish$conf.int[1]/(druguserfish$conf.int[1] +1))*100
+hi=(druguserfish$conf.int[2]/(druguserfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 

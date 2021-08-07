@@ -57,7 +57,7 @@ basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
 basicCC + geom_bar(stat="identity",position="dodge")
 ```
 
-The guy bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+The guy bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. It appears that men who take the vaccine are more likely to get infected with covid-19 than from those who take the placebo.
 
 ## Numerical Results
 
@@ -116,7 +116,7 @@ basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
 basicCC + geom_bar(stat="identity",position="dodge")
 ```
 
-The gal bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+The gal bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. It appears that women who take the vaccine are less likely to get infected with covid-19 than from those who take the placebo.
 
 ## Numerical Results
 
@@ -175,7 +175,7 @@ basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
 basicCC + geom_bar(stat="identity",position="dodge")
 ```
 
-The gay bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+The gay bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. It appears that gay people who take the vaccine are more likely to get infected with covid-19 than from those who take the placebo. 
 
 ## Numerical Results
 
@@ -234,7 +234,7 @@ basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment))
 basicCC + geom_bar(stat="identity",position="dodge")
 ```
 
-The druguser bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. 
+The druguser bar-plot shows their population and their unique relationship to the covid-19 vaccine by either taking it or taking the placebo. It appears that drugusers who take the vaccine are less likely to get infected with covid-19 than from those who take the placebo.
 
 ## Numerical Results
 
